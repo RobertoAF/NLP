@@ -1,33 +1,27 @@
-from functools import reduce
-
 from nltk.tokenize.regexp import regexp_tokenize
 from nltk.tokenize import TweetTokenizer
 from nltk.tokenize import word_tokenize
 
+from utils.utils import Utils
 
-class CorpusReader:
+
+class ListCorpusReader:
     """
-    Inputs a raw corpus and generates a processed corpus consisting of a nested list of tokenized documents.
+    Inputs a list of strings and generates a processed corpus consisting of a nested list of tokenized documents.
     """
 
     def __init__(self, raw_corpus):
         self.corpus = self.load_corpus(raw_corpus)
 
-    @staticmethod
-    def pipeline(x, *funcs):
-        """
-        A functional approach for executing a sequence of methods applied to the same argument.
-        """
-        return reduce(lambda x, f: f(x), funcs, x)
-
     def load_corpus(self, raw_corpus):
         """
         Loads raw corpus.
         """
-        return self.pipeline(raw_corpus, self.nltk_regexp_tokenize)
+        return Utils.pipeline(raw_corpus, self.nltk_regexp_tokenize)
 
     @staticmethod
     def nltk_regexp_tokenize(raw_corpus):
+        # regular expression pattern includes punctuation
         re_pattern = '\w+|\$[\d\.]+|\S+'
         return [regexp_tokenize(doc, re_pattern) for doc in raw_corpus]
 
